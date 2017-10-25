@@ -14,6 +14,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -179,7 +180,7 @@ public class BailleurRestController {
         @Produces("application/json")
         public Response SearcheBailleur(@QueryParam("attribut") String attribut,@QueryParam("value") String value) throws IntrospectionException {
             
-            Bailleur  b = new Bailleur();
+            List<Bailleur>   b = new ArrayList<Bailleur>();
             
             String[] attributArray = attribut.split(",");
              PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Bailleur

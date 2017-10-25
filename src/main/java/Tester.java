@@ -1,6 +1,4 @@
 
-import com.bootcamp.jpa.entities.Bailleur;
-import com.bootcamp.jpa.repositories.BailleurRepository;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,9 +13,9 @@ import com.bootcamp.jpa.repositories.BailleurRepository;
 public class Tester {
     
     public static void main(String[] args) {
-        BailleurRepository br = new BailleurRepository("punit-mysql");
-        Bailleur b = br.findSearche("nom", "hilaire");
-        System.out.println("le bailleur: "+b.toString());
+//        BailleurRepository br = new BailleurRepository("punit-mysql");
+//        Bailleur b = br.findSearche("nom", "hilaire");
+//        System.out.println("le bailleur: "+b.toString());
     }
     
 }

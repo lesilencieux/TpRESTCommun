@@ -87,12 +87,12 @@ public class BaseRepository<T> {
     }
     
     
-     public T findSearche(String str ,String value){
+     public List<T> findSearche(String str ,String value){
         
             String className = entityClass.getSimpleName(); 
             String s = "SELECT ob FROM "+className+" ob WHERE ob."+str+" LIKE '%"+value+"%'";
             Query query = getEntityManager().createQuery(s);
-            T result = (T) query.getSingleResult();
+             List<T> result = query.getResultList();
             return result;
     }
     

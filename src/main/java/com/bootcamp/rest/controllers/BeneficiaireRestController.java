@@ -5,17 +5,34 @@
  */
 package com.bootcamp.rest.controllers;
 
+import com.bootcamp.jpa.entities.Bailleur;
 import com.bootcamp.jpa.entities.Beneficiaire;
+import com.bootcamp.jpa.entities.IndicateurPerformance;
 import com.bootcamp.jpa.repositories.BeneficiaireRepository;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -23,90 +40,61 @@ import javax.ws.rs.core.Response;
  *
  * @author root
  */
-@Path("/beneficiaires")
+@Path("/beneficiaire")
 public class BeneficiaireRestController {
 
     BeneficiaireRepository br = new BeneficiaireRepository("punit-mysql");
-    //Cette methode cree une nouvelle instance de beneficiaire et la retourne
-    @GET
-    @Path("/unpersist_list")
-    @Produces("application/json")
-    public Response getList(){
-        return Response.status(200).entity(new Beneficiaire()).build();
-    }
-    /*
-    *
-    *La methode ci-dessous  cree une instance de BeneficiaireRepository (br) , 
-    *applique sur cette derniere la methode findAll de cette classe
-    *puis essaie de retourner la liste des beneficiaires persistés.
-    *si tout ce passe bien la liste est retournee si l'exeption est levee 
-    *et le message d'erreur est retournee dans le catch.
-    * Cette liste est accessible avec URI /list
-    *
-    */
+    Beneficiaire b;
+    
     @GET
     @Path("/list")
     @Produces("application/json")
-    public Response getListBeneficiaireFromDB(){
-        try {
-            return Response.status(200).entity(br.findAll()).build();
-        } catch (Exception e) {
-            return Response.status(404).entity("Erreur ! Veuillez revoir l' URL et reessayez").build();
-        }      
+    public Response getList(){
+        Beneficiaire beneficiaire = new Beneficiaire();
+        return Response.status(200).entity(beneficiaire).build();
     }
-    /*
-    *
-    *La methode  ci-dessous cree une instance de BeneficiaireRepository (br) , 
-    *applique sur cette derniere la methode findById de la classe
-    *pour retourner le beneficiaire   persisté avec l'indentifiant specifié dans 
-    *l'URI d'acces qui est /list/id ou id est l'identifiant.
-    *
-    */
+    
+    @GET
+    @Path("/listsdebase")
+    @Produces("application/json")
+    public Response getListBaailleurFromDB(){
+        
+        return Response.status(200).entity(br.findAll()).build();
+    }
+    
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response getBeneficiaireByIdFromDB(@PathParam("id") int id) throws SQLException{
+    public Response getBaailleurByIdFromDB(@PathParam("id") int id) throws SQLException{
+        br = new BeneficiaireRepository("punit-mysql");
         Beneficiaire beneficiaire = br.findById(id);
-        try {
-            //Verification de l'existance de l'id dans la base de donnee
-            
-            if(beneficiaire == null){
-            return Response.status(500).entity("Aucun beneficiaire ne correspond a l'indifiant indique").build();
-        } else
+        if(beneficiaire.getId()!=id){
+            return Response.status(200).entity(beneficiaire).build();
+        }
+       if(beneficiaire != null) {
            return Response.status(200).entity(beneficiaire).build();
-        } catch (Exception e) {
-             return Response.status(401).entity("Veuillez verifier si c'est bien un URL correcte qque vous entrez").build();
-        }  
+        }else return Response.status(404).build();
     }
     
     
     @POST
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createBene(Beneficiaire beneficiaire) throws SQLException {
- 
-        if(br.create(beneficiaire)){
-            return Response.status(202).entity("l'entite est cree est succes").build();
-        }else{
-          return Response.status(404).entity("Erreur de creation de l'entite").build();  
-        }
+    public void create(Beneficiaire beneficiaire) throws SQLException {
+        br.create(beneficiaire);
     }
 
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateBene(Beneficiaire beneficiaire) throws SQLException {
-        
-        
-        br.update(beneficiaire);
-        return Response.status(202).entity("l'entite est bien mise a jour ou cree s'il n'existait pas").build();
-       
+    public void update(Beneficiaire beneficiaire) throws SQLException {
+       br.update(beneficiaire);
     }
     
-    @DELETE
+     @DELETE
     @Path("/delete/{id}")
     public Response deleteBene(@PathParam("id") int id) throws SQLException {
-          Beneficiaire b= br.findById(id);
+          b= br.findById(id);
         try {
             br.delete(b);
             return Response.status(202).entity("l'entite est supprime est succes").build();
@@ -115,4 +103,110 @@ public class BeneficiaireRestController {
         }
      
     }
+    
+   @GET
+   @Path("/pers/param/{id}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response getByIdParam(@PathParam("id") int id, @QueryParam("fields") String fields) throws SQLException, IllegalArgumentException, IllegalAccessException, IntrospectionException, InvocationTargetException {
+       String[] fieldArray = fields.split(",");
+       BeneficiaireRepository beneficiaireRepository = new BeneficiaireRepository("punit-mysql");
+       Beneficiaire beneficiaire = beneficiaireRepository.findById(id);
+       Map<String, Object> responseMap = new HashMap<>();
+       PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Beneficiaire
+                                                                .class).getPropertyDescriptors();
+
+       for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+
+           Method method = propertyDescriptor.getReadMethod();
+           if (check(fieldArray, propertyDescriptor.getName())) {
+               responseMap.put(propertyDescriptor.getName(), method.invoke(beneficiaire));
+           }
+             System.out.println(method.invoke(beneficiaire));
+       }
+       return Response.status(200).entity(responseMap).build();
+   }
+    
+   private boolean check(String[] fields, String field) {
+
+       for (String field1 : fields) {
+           if (field.equals(field1)) {
+               return true;
+           }
+       }
+       return false;
+   }
+   
+    @GET
+    @Path("/list/triees")
+    @Produces("application/json")
+   public Response triBeneficiaire(@QueryParam("sort") String attribut){
+       List<Beneficiaire>  bene = br.findAll();
+       Collections.sort(bene, new Comparator<Beneficiaire>() {
+           @Override
+           public int compare(Beneficiaire b, Beneficiaire b1) {
+               
+                         
+               int result =0;
+                             
+               String[] attributArray = attribut.split(",");
+               
+               PropertyDescriptor[] propertyDescriptors;
+               try {
+  
+                   propertyDescriptors = Introspector.getBeanInfo(Beneficiaire.class).getPropertyDescriptors();
+                   
+                      for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+
+                        Method method = propertyDescriptor.getReadMethod();
+                        if (check(attributArray, propertyDescriptor.getName())) {
+
+                            
+                                switch (propertyDescriptor.getName()){
+                                    case "nom":
+                                        result = b.getNom().compareToIgnoreCase(b1.getNom());
+                                        break;
+                                       
+                                }
+                        }
+                    }
+               } catch (IntrospectionException ex) {
+                   Logger.getLogger(BeneficiaireRestController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+                  return result;
+        }
+       });
+       
+       return Response.status(200).entity(bene).build();
+   }
+   
+        @GET
+        @Path("/list/paginer")
+        @Produces("application/json")
+        public Response findPagingBeneficiaire(@QueryParam("offset") 
+        @DefaultValue("0") Integer offset, @QueryParam("limit") @DefaultValue("2") Integer limit) {
+            return Response.status(200).entity(br.findPerPager(offset, limit)).build();
+        }
+        
+       @GET
+        @Path("/list/recherche")
+        @Produces("application/json")
+        public Response SearcheBeneficiaire(@QueryParam("attribut") String attribut,@QueryParam("value") String value) throws IntrospectionException {
+            
+           List<Beneficiaire>    b= new ArrayList<Beneficiaire>();
+            
+            String[] attributArray = attribut.split(",");
+             PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Beneficiaire
+                                                                .class).getPropertyDescriptors();
+
+                for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+
+                    Method method = propertyDescriptor.getReadMethod();
+                    if (check(attributArray, propertyDescriptor.getName())) {
+                     b=  br.findSearche(attribut, value);
+                      
+                    }
+                }
+            return Response.status(200).entity(b).build(); 
+        }     
 }
+        
