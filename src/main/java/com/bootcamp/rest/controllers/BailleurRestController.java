@@ -19,7 +19,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -117,20 +121,79 @@ public class BailleurRestController {
        return false;
    }
    
-   public Response triBailleur(){
+    @GET
+    @Path("/list/triees")
+    @Produces("application/json")
+   public Response triBailleur(@QueryParam("sort") String attribut){
        List<Bailleur>  bails = br.findAll();
        Collections.sort(bails, new Comparator<Bailleur>() {
            @Override
            public int compare(Bailleur b, Bailleur b1) {
-               if(b==null){
-                   if(b1==null)return -1;
+               
+                         
+               int result =0;
+                             
+               String[] attributArray = attribut.split(",");
+               
+               PropertyDescriptor[] propertyDescriptors;
+               try {
+  
+                   propertyDescriptors = Introspector.getBeanInfo(Bailleur.class).getPropertyDescriptors();
+                   
+                      for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+
+                        Method method = propertyDescriptor.getReadMethod();
+                        if (check(attributArray, propertyDescriptor.getName())) {
+
+                            
+                                switch (propertyDescriptor.getName()){
+                                    case "nom":
+                                        result = b.getNom().compareToIgnoreCase(b1.getNom());
+                                        break;
+                                        case "TypeBailleur":
+                                        result = b.getTypeBailleur().compareTo(b1.getTypeBailleur());   
+                                        break;
+                                }
+                        }
+                    }
+               } catch (IntrospectionException ex) {
+                   Logger.getLogger(BailleurRestController.class.getName()).log(Level.SEVERE, null, ex);
                }
-               if(b1==null) return 1;
-                   int result = b.getNom().compareToIgnoreCase(b1.getNom());
                   return result;
         }
        });
        
        return Response.status(200).entity(bails).build();
    }
+   
+        @GET
+        @Path("/list/paginer")
+        @Produces("application/json")
+        public Response findPagingBailleur(@QueryParam("offset") 
+        @DefaultValue("0") Integer offset, @QueryParam("limit") @DefaultValue("2") Integer limit) {
+            return Response.status(200).entity(br.findPerPager(offset, limit)).build();
+        }
+        
+       @GET
+        @Path("/list/recherche")
+        @Produces("application/json")
+        public Response SearcheBailleur(@QueryParam("attribut") String attribut,@QueryParam("value") String value) throws IntrospectionException {
+            
+            Bailleur  b = new Bailleur();
+            
+            String[] attributArray = attribut.split(",");
+             PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Bailleur
+                                                                .class).getPropertyDescriptors();
+
+                for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+
+                    Method method = propertyDescriptor.getReadMethod();
+                    if (check(attributArray, propertyDescriptor.getName())) {
+                     b=  br.findSearche(attribut, value);
+                      
+                    }
+                }
+            return Response.status(200).entity(b).build(); 
+        }     
 }
+        

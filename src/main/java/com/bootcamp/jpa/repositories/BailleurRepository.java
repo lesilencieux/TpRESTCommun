@@ -36,6 +36,14 @@ public class BailleurRepository extends BaseRepository<Bailleur>{
     }
     
     
-    
+//    public List<Bailleur> getBa(){
+//        String str = "SELECT * FROM tp_personne WHERE nom LIKE '%hilaire%' ";
+//        Query q = getEntityManager().createNativeQuery(str);
+//        q.executeUpdate();
+//       List<Bailleur> ba =  q.getResultList();
+//        return q.getResultList();
+//    }
+//    
+//    
     
 }

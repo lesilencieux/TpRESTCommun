@@ -62,9 +62,8 @@ public class Bailleur extends Personne implements Serializable {
 
     @Override
     public String toString() {
-        return "Bailleur{" + "Type De Bailleur=" + typeBailleur + ", Programme(s) finance(e) par le bailleur  =" + programmes + ", Projet(s) conserne(s) =" + projets + '}';
+        return "Bailleur{ " + "typeBailleur=" + typeBailleur + ", programmes=" + programmes + ", projets=" + projets + " , Nom du Baiilleur"+this.getNom()+ "Id "+this.getId()+'}';
     }
 
-    
     
 }

@@ -5,6 +5,7 @@
  */
 package com.bootcamp.jpa.repositories;
 
+import java.awt.print.Pageable;
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -84,6 +85,29 @@ public class BaseRepository<T> {
             List<T> result = query.getResultList();
             return result;
     }
+    
+    
+     public T findSearche(String str ,String value){
+        
+            String className = entityClass.getSimpleName(); 
+            String s = "SELECT ob FROM "+className+" ob WHERE ob."+str+" LIKE '%"+value+"%'";
+            Query query = getEntityManager().createQuery(s);
+            T result = (T) query.getSingleResult();
+            return result;
+    }
+    
+    
+    
+     public List<T> findPerPager(int offset,int  limit){
+        
+            String className = entityClass.getSimpleName(); 
+            String s = "select ob FROM "+className+" ob";
+            Query query = getEntityManager().createQuery(s);
+            query.setFirstResult(offset).setMaxResults(limit);
+            List<T> result = query.getResultList();
+            return result;
+    }
+    
     
     public Boolean update(T t){
        getEntityManager().getTransaction().begin();
