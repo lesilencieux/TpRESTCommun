@@ -5,8 +5,13 @@
  */
 package com.bootcamp.jpa.repositories;
 
-import java.awt.print.Pageable;
+import com.bootcamp.jpa.entities.Bailleur;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -116,4 +121,32 @@ public class BaseRepository<T> {
        return true;
     }
     
+    
+      public List<PropertyDescriptor> returnAskedPropertiesIfExist(Class c, String flds) throws IntrospectionException, SQLException{
+          List<PropertyDescriptor> exitedProperties = new ArrayList<>();
+          exitedProperties.clear();
+          String[] fieldArray = flds.split(",");
+           PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(c).getPropertyDescriptors();
+          for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+
+           Method method = propertyDescriptor.getReadMethod();
+           if (check(fieldArray, propertyDescriptor.getName())) {
+              exitedProperties.add(propertyDescriptor);
+           }
+       }
+          return exitedProperties;
+      } 
+    
+      private boolean check(String[] fields, String field) {
+
+       for (String field1 : fields) {
+           if (field.equals(field1)) {
+               return true;
+           }
+       }
+       return false;
+   }
+   
+      
+      
 }

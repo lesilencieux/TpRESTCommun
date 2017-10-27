@@ -8,7 +8,6 @@ package com.bootcamp.rest.controllers;
 import com.bootcamp.jpa.entities.Programme;
 import com.bootcamp.jpa.repositories.ProgrammeRepository;
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,11 +17,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.Logger;  
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -40,87 +37,94 @@ import javax.ws.rs.core.Response;
  */
 @Path("/programme")
 public class ProgrammeRestController {
-
+    //instanciations
     ProgrammeRepository pr = new ProgrammeRepository("punit-mysql");
-    Programme f;
-    
-    @GET
-    @Path("/list")
-    @Produces("application/json")
-    public Response getList(){
-        Programme programme = new Programme();
-        return Response.status(200).entity(programme).build();
-    }
-    
-    @GET
-    @Path("/listsdebase")
-    @Produces("application/json")
-    public Response getListBaailleurFromDB(){
-        
-        return Response.status(200).entity(pr.findAll()).build();
-    }
-    
-    @GET
-    @Path("/{id}")
-    @Produces("application/json")
-    public Response getBaailleurByIdFromDB(@PathParam("id") int id) throws SQLException{
-        pr = new ProgrammeRepository("punit-mysql");
-        Programme programme = pr.findById(id);
-        if(programme.getId()!=id){
-            return Response.status(200).entity(programme).build();
-        }
-       if(programme != null) {
-           return Response.status(200).entity(programme).build();
-        }else return Response.status(404).build();
-    }
-    
-    
-    @POST
-    @Path("/create")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void create(Programme programme) throws SQLException {
-        pr.create(programme);
-    }
-
-    @PUT
-    @Path("/update")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void update(Programme programme) throws SQLException {
-       pr.update(programme);
-    }
-    
-     @DELETE
-    @Path("/delete/{id}")
-    public Response deleteBene(@PathParam("id") int id) throws SQLException {
-          f= pr.findById(id);
+    Programme programme = new Programme();
+    List<Programme> programmes = new ArrayList<>();
+    @GET //Signifie que c est une methode de lecture
+    @Path("/test")//URI pour retourner l instance non persistee
+    @Produces("application/json")//Signifie que la methode produit du JSON
+    public Response getOneProgramme(){
         try {
-            pr.delete(f);
-            return Response.status(202).entity("l'entite est supprime est succes").build();
+            //Creation d un programme
+            programme.setId(111);
+            programme.setNom("Programme Test");
         } catch (Exception e) {
-             return Response.status(404).entity("Erreur de suppression de l'entite").build();
+            //Retourne l erreur de message
+            return Response.status(200).entity("Erreur de de creation de la nouvelle instance ").build();
         }
-     
+            //Retourne l instance cree
+            return Response.status(200).entity(programme).build();
     }
     
-   @GET
-   @Path("/pers/param/{id}")
-   @Produces(MediaType.APPLICATION_JSON)
+    
+    @GET//Signifie que c est une methode de lecture
+    @Path("/list")//URI pour retourner toutes les  instances de programmes persistees
+    @Produces("application/json")//Signifie que la methode produit du JSON
+    public Response getListBaailleurFromDB(){
+        try {
+            programmes =pr.findAll();//Recuperation des instances de programme depuis la base de donnee
+        } catch (Exception e) {
+            //Retourne l erreur de recuperation
+            return Response.status(404).entity("Erreur de de creation de la nouvelle instance ").build();   
+        }
+            //Retourne la liste recuperee de la base de donnee
+            return Response.status(200).entity(programmes).build();
+    }
+    
+    @GET//Signifie que c est une methode de lecture
+    @Path("/{id}")//Retourne le programme dont l identifiant est id
+    @Produces("application/json")
+    public Response getBaailleurByIdFromDB(@PathParam("id") int id) {
+        try {
+                programme = pr.findById(id);//Recuperation du programme d id  depuis la base
+            if(programme!=null){
+                //Retourne l erreur signalant que il n y a pas de programme ayant ce is
+                return Response.status(404).entity("Aucun programme pour cet identifiant").build();
+            } 
+        } catch (SQLException ex) {
+            //Retourne l erreur de resource non trouvee 
+            Logger.getLogger(ProgrammeRestController.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(404).entity("Veuillez verifier votre URL").build();
+        }
+            //Retourne le programme demande
+            return Response.status(200).entity(programme).build();
+    }
+    
+    
+    @POST//Signifie que c est une methode d ecriture
+    @Path("/create")//URI pour creer
+    @Consumes(MediaType.APPLICATION_JSON)//Signifie que l on consomme du JSON pour la creation
+    public Response create(Programme programme)  {
+        try {
+            pr.create(programme);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProgrammeRestController.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(200).entity("Probleme de creation").build();
+        }
+        //Retourne le message de creation
+        return Response.status(200).entity("Enregistre avec succes").build();
+    }
+
+    @PUT//Signifie que c est une methode d ecriture
+    @Path("/update")//URI  pour la mise a jour ou de creation si ce  existait pas
+    @Consumes(MediaType.APPLICATION_JSON)//Signifie que l on consomme du JSON pour la mise a jour
+    public Response update(Programme programme) {
+        
+        try {
+           pr.update(programme);
+        } catch (Exception e) {
+           return Response.status(400).entity("problemede mise a jour ").build();
+        }
+        return Response.status(200).entity("Mise a jour avec succes").build();
+    }
+        
+   @GET//Signifie qu il s agit d une methode de lecture 
+   @Path("/attribut/essentiels/{id}")//Avec cette URI on donnera seulement les attributs que l on souhaite afficher pour un programme donne
+   @Produces(MediaType.APPLICATION_JSON)//Production de JSON
    public Response getByIdParam(@PathParam("id") int id, @QueryParam("fields") String fields) throws SQLException, IllegalArgumentException, IllegalAccessException, IntrospectionException, InvocationTargetException {
-       String[] fieldArray = fields.split(",");
-       ProgrammeRepository programmeRepository = new ProgrammeRepository("punit-mysql");
-       Programme programme = programmeRepository.findById(id);
-       Map<String, Object> responseMap = new HashMap<>();
-       PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Programme
-                                                                .class).getPropertyDescriptors();
 
-       for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-
-           Method method = propertyDescriptor.getReadMethod();
-           if (check(fieldArray, propertyDescriptor.getName())) {
-               responseMap.put(propertyDescriptor.getName(), method.invoke(programme));
-           }
-             System.out.println(method.invoke(programme));
-       }
+       HashMap<String, Object> responseMap = magik(id,fields);
        return Response.status(200).entity(responseMap).build();
    }
     
@@ -134,47 +138,48 @@ public class ProgrammeRestController {
        return false;
    }
    
-    @GET
-    @Path("/list/triees")
-    @Produces("application/json")
-   public Response triProgramme(@QueryParam("sort") String attribut){
-       List<Programme>  bene = pr.findAll();
-       Collections.sort(bene, new Comparator<Programme>() {
+    @GET//Signifie que c est une methode de lecture
+    @Path("/list/tries")//URI pour avoir la liste des Programmes tries suivant un attribut donne
+    @Produces("application/json")//Permet de dire a la methode quelle va produire du JSON
+    public Response triProgramme(@QueryParam("sort") String attribut){
+       List<Programme>  bail = pr.findAll();//Recuperation de tous les programmes
+       //Comparaison de la liste retournee
+       Collections.sort(bail, new Comparator<Programme>() {
            @Override
            public int compare(Programme b, Programme b1) {
-               
-                         
-               int result =0;
-                             
-               String[] attributArray = attribut.split(",");
-               
-               PropertyDescriptor[] propertyDescriptors;
+            int result =0;
+               List<PropertyDescriptor> propertyDescriptors ;
                try {
-  
-                   propertyDescriptors = Introspector.getBeanInfo(Programme.class).getPropertyDescriptors();
+                   //La methode returnAskedPropertiesIfExist verifie si l attribut specifie 
+                   //par l utilisateur fait partir des proprietse de la classe
+                   //Si oui la liste d attribut 
+                   propertyDescriptors = pr.returnAskedPropertiesIfExist(Programme.class,attribut);
+                   if(!propertyDescriptors.isEmpty()){ //Verifions si la liste retournee n est vide
+                for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
                    
-                      for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-
-                        Method method = propertyDescriptor.getReadMethod();
-                        if (check(attributArray, propertyDescriptor.getName())) {
-
-                            
-                                switch (propertyDescriptor.getName()){
-                                    case "nom":
-                                        result = b.getNom().compareToIgnoreCase(b1.getNom());
-                                        break;
-                                       
-                                }
-                        }
-                    }
+                  //Suivant le nom de l attribut on compare pour le tri
+                       switch (propertyDescriptor.getName()){
+                           case "nom":
+                               result = b.getNom().compareToIgnoreCase(b1.getNom());
+                               break;
+                           default:
+                                result =0;
+                                break;
+                   }
+               }   
+               }
                } catch (IntrospectionException ex) {
                    Logger.getLogger(ProgrammeRestController.class.getName()).log(Level.SEVERE, null, ex);
+               } catch (SQLException ex) {
+                   Logger.getLogger(ProgrammeRestController.class.getName()).log(Level.SEVERE, null, ex);
                }
+               
+               
                   return result;
         }
        });
        
-       return Response.status(200).entity(bene).build();
+       return Response.status(200).entity(bail).build();
    }
    
         @GET
@@ -188,23 +193,34 @@ public class ProgrammeRestController {
        @GET
         @Path("/list/recherche")
         @Produces("application/json")
-        public Response SearcheProgramme(@QueryParam("attribut") String attribut,@QueryParam("value") String value) throws IntrospectionException {
-            
-           List<Programme>    b= new ArrayList<Programme>();
-            
-            String[] attributArray = attribut.split(",");
-             PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(Programme
-                                                                .class).getPropertyDescriptors();
-
-                for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-
-                    Method method = propertyDescriptor.getReadMethod();
-                    if (check(attributArray, propertyDescriptor.getName())) {
-                     b=  pr.findSearche(attribut, value);
-                      
-                    }
+        public Response SearcheProgramme(@QueryParam("attribut") String attribut,@QueryParam("value") String value) throws IntrospectionException, SQLException {
+ 
+             List<PropertyDescriptor> propertyDescriptors = pr.returnAskedPropertiesIfExist(Programme.class,attribut);
+             if(!propertyDescriptors.isEmpty()){
+                 for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                     programmes=  pr.findSearche(attribut, value);
+                     
                 }
-            return Response.status(200).entity(b).build(); 
+             }   
+             
+            return Response.status(200).entity(programmes).build(); 
         }     
+        
+        
+      public HashMap magik(int id,String flds) throws IntrospectionException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+       
+       HashMap<String, Object> responseMap = new HashMap<>();
+       programme = pr.findById(id);
+       List<PropertyDescriptor> propertyDescriptors = pr.returnAskedPropertiesIfExist(Programme.class,flds);
+       
+       if(!(propertyDescriptors.isEmpty())){
+           for ( PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+               Method method = propertyDescriptor.getReadMethod();
+               responseMap.put(propertyDescriptor.getName(), method.invoke(programme));
+           }
+       }
+       return responseMap;
+      }
+      
 }
         
