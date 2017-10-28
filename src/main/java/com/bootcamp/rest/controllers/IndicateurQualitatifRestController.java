@@ -16,8 +16,8 @@ import javax.ws.rs.*;
  *
  * @author Iso-Doss
  */
-@Path("/indicateurperformance")
-public class IndicateurPerformanceRestController {
+@Path("/indicateurqualitatif")
+public class IndicateurQualitatifRestController {
 
     private IndicateurPerformanceRepository derby = new IndicateurPerformanceRepository("tpJpa");
 
