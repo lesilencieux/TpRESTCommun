@@ -28,51 +28,50 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "tp_programme")
 public class Programme implements Serializable {
-   /*
+
+    /*
     *Debut de la 
     *declaration des variables de la classe
-    */
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotNull(message="Ce champs ne doit pas etre vide")
-    private String nom, objectif ;
+    @NotNull(message = "Ce champs ne doit pas etre vide")
+    private String nom, objectif;
     @NotNull(message = "Ce champs ne doit pas etre vide")
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date dateDeDebut ,dateDeFin;
-    @NotNull(message="Ce champs ne doit pas etre vide")
-    private int budgetPrevisioonel,budgetEffectif;
-    
+    private Date dateDeDebut, dateDeFin;
+    @NotNull(message = "Ce champs ne doit pas etre vide")
+    private int budgetPrevisioonel, budgetEffectif;
+
     /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
-     /*
+     */
+ /*
     *
     *Les mappings
     *
-    */
-    
+     */
     //mapping avec indicateur performance
     @OneToOne(fetch = FetchType.LAZY)
     private IndicateurPerformance indicateurPerformance;
-    
+
     //Representation de la collection de beneficiaire dans programme
     @OneToMany(mappedBy = "programme")
     private final List<BeneficiaireProgramme> beneficiaires = new ArrayList<BeneficiaireProgramme>();
-    
+
     //Representation de la collection de bailleur dans programme
     @OneToMany(mappedBy = "programme")
     private final List<BailleurProgramme> bailleurs = new ArrayList<BailleurProgramme>();
-    
+
     //Representation de la collection de fournisseur dans programme
     @OneToMany(mappedBy = "programme")
     private final List<FournisseurProgramme> programmes = new ArrayList<FournisseurProgramme>();
-    
+
     //Representation de la collection du projet dans progamme
-    @OneToMany(cascade =  CascadeType.ALL,mappedBy = "programme")
-    private final List<Projet> projets =new ArrayList<Projet>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "programme")
+    private final List<Projet> projets = new ArrayList<Projet>();
 
     public int getId() {
         return id;
@@ -98,7 +97,6 @@ public class Programme implements Serializable {
         this.objectif = objectif;
     }
 
-    
     public Date getDateDeDebut() {
         return dateDeDebut;
     }
@@ -139,5 +137,4 @@ public class Programme implements Serializable {
         this.indicateurPerformance = indicateurPerformance;
     }
 
-    
 }

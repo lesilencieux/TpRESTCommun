@@ -11,11 +11,10 @@ import com.bootcamp.jpa.entities.Programme;
  *
  * @author Administrateur
  */
-public class ProgrammeRepository extends BaseRepository<Programme>{
-    
+public class ProgrammeRepository extends BaseRepository<Programme> {
 
     public ProgrammeRepository(String unitPersistence) {
         super(unitPersistence, Programme.class);
     }
-    
+
 }

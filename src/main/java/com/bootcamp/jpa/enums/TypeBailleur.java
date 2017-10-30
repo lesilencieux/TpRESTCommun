@@ -10,8 +10,8 @@ package com.bootcamp.jpa.enums;
  * @author Administrateur
  */
 public enum TypeBailleur {
-   
+
     GOUVERNEMENT,
     PRIVE,
-    PARTENAIRE_INTERNATIONAL  
+    PARTENAIRE_INTERNATIONAL
 }

@@ -13,29 +13,28 @@ import javax.persistence.Query;
  *
  * @author Administrateur
  */
-public class BailleurRepository extends BaseRepository<Bailleur>{
+public class BailleurRepository extends BaseRepository<Bailleur> {
 
     public BailleurRepository(String unitPersistence) {
-        super(unitPersistence,Bailleur.class);
+        super(unitPersistence, Bailleur.class);
     }
-    
-    public List<Bailleur> getBailleursOfProgramme(int id){
-        String s = "SELECT  bail FROM Bailleur bail \n "+
-                "JOIN bail.programmes bail_prog JOIN bail.programme prog WHERE prog.id = : identifiant";
+
+    public List<Bailleur> getBailleursOfProgramme(int id) {
+        String s = "SELECT  bail FROM Bailleur bail \n "
+                + "JOIN bail.programmes bail_prog JOIN bail.programme prog WHERE prog.id = : identifiant";
         Query query = getEntityManager().createQuery(s);
         query.setParameter("identifiant", id);
         return query.getResultList();
     }
-    
-    public List<Bailleur> getBailleurOfProjet(int id){
-        String str = "SELECT   bail FROM Bailleur bail \n "+
-                "JOIN bail.projets bail_prog JOIN  bail.projet prog WHERE prog.id = : identifiant";
-        Query query =  getEntityManager().createQuery(str);
+
+    public List<Bailleur> getBailleurOfProjet(int id) {
+        String str = "SELECT   bail FROM Bailleur bail \n "
+                + "JOIN bail.projets bail_prog JOIN  bail.projet prog WHERE prog.id = : identifiant";
+        Query query = getEntityManager().createQuery(str);
         query.setParameter("identifiant", id);
         return query.getResultList();
     }
-    
-    
+
 //    public List<Bailleur> getBa(){
 //        String str = "SELECT * FROM tp_personne WHERE nom LIKE '%hilaire%' ";
 //        Query q = getEntityManager().createNativeQuery(str);
@@ -45,5 +44,4 @@ public class BailleurRepository extends BaseRepository<Bailleur>{
 //    }
 //    
 //    
-    
 }

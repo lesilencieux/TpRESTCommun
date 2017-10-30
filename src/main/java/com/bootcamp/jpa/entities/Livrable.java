@@ -24,27 +24,28 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "tp_livrable")
 public class Livrable implements Serializable {
+
     /*
     *Debut de la 
     *declaration des variables de la classe
-    */
-     @Id
+     */
+    @Id
     private int id;
-    @NotNull(message="Ce champs ne doit pas etre vide")
-    private String nom ;
+    @NotNull(message = "Ce champs ne doit pas etre vide")
+    private String nom;
     @NotNull(message = "Ce champs ne doit pas etre vide")
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date dateDeDebut ,dateDeFin;
+    private Date dateDeDebut, dateDeFin;
     /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
+     */
+
     //mapping avec projet
     @ManyToOne
     @JoinColumn(name = "projet", referencedColumnName = "id")
     private Projet projet;
-    
+
     @OneToOne(fetch = FetchType.LAZY)
     private IndicateurPerformance indicateurPerformance;
 
@@ -95,6 +96,5 @@ public class Livrable implements Serializable {
     public void setIndicateurPerformance(IndicateurPerformance indicateurPerformance) {
         this.indicateurPerformance = indicateurPerformance;
     }
-      
-    
+
 }

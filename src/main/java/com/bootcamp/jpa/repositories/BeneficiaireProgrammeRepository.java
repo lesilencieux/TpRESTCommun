@@ -11,9 +11,9 @@ import com.bootcamp.jpa.entities.BeneficiaireProgramme;
  *
  * @author Administrateur
  */
-public class BeneficiaireProgrammeRepository  extends BaseRepository<BeneficiaireProgramme>{
+public class BeneficiaireProgrammeRepository extends BaseRepository<BeneficiaireProgramme> {
 
     public BeneficiaireProgrammeRepository(String unitPersistence) {
-        super(unitPersistence , BeneficiaireProgramme.class);
+        super(unitPersistence, BeneficiaireProgramme.class);
     }
 }

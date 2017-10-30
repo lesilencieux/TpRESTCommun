@@ -22,29 +22,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tp_fournisseur_programme")
 public class FournisseurProgramme implements Serializable {
+
     /*
     *Debut de la 
     *declaration des variables de la classe
-    */
-    
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
-     /*
+
+    /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
+     */
     //mapping avec programme
-    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JoinColumn(name = "programme_id",referencedColumnName = "id")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "programme_id", referencedColumnName = "id")
     private Programme programme;
-    
+
     //mapping avec fournisseur
-    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JoinColumn(name="fournisseur_id",referencedColumnName = "id")
-    private Fournisseur  fournisseur;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "fournisseur_id", referencedColumnName = "id")
+    private Fournisseur fournisseur;
 
     public int getId() {
         return id;
@@ -69,6 +69,5 @@ public class FournisseurProgramme implements Serializable {
     public void setFournisseur(Fournisseur fournisseur) {
         this.fournisseur = fournisseur;
     }
-    
-    
+
 }

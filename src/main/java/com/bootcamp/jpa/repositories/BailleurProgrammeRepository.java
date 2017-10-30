@@ -11,11 +11,10 @@ import com.bootcamp.jpa.entities.BailleurProgramme;
  *
  * @author Administrateur
  */
-public class BailleurProgrammeRepository extends BaseRepository<BailleurProgramme>{
- 
-    
+public class BailleurProgrammeRepository extends BaseRepository<BailleurProgramme> {
+
     public BailleurProgrammeRepository(String unitPersistence) {
-        super(unitPersistence,BailleurProgramme.class);
+        super(unitPersistence, BailleurProgramme.class);
     }
-    
+
 }

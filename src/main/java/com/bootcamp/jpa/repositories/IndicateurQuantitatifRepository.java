@@ -11,10 +11,10 @@ import com.bootcamp.jpa.entities.IndicateurQuantitatif;
  *
  * @author Administrateur
  */
-public class IndicateurQuantitatifRepository extends BaseRepository<IndicateurQuantitatif>{
- 
+public class IndicateurQuantitatifRepository extends BaseRepository<IndicateurQuantitatif> {
+
     public IndicateurQuantitatifRepository(String unitPersistence) {
-        super(unitPersistence,IndicateurQuantitatif.class);
+        super(unitPersistence, IndicateurQuantitatif.class);
     }
-    
+
 }

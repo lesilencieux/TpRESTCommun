@@ -21,14 +21,15 @@ import javax.validation.constraints.NotNull;
  * @author Administrateur
  */
 @Entity
-@Table(name="tp_personne")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type_personne")
+@Table(name = "tp_personne")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type_personne")
 public class Personne implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotNull(message="Ce ne doit pas etre vide")
+    @NotNull(message = "Ce ne doit pas etre vide")
     private String nom;
 
     public int getId() {
@@ -46,6 +47,5 @@ public class Personne implements Serializable {
     public void setNom(String nom) {
         this.nom = nom;
     }
-    
-    
+
 }

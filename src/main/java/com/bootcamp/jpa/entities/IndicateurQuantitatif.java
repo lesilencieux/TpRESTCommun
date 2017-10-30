@@ -20,28 +20,26 @@ import javax.validation.constraints.NotNull;
  * @author Administrateur
  */
 @Entity
-@Table(name="tp_indicateur_quantitatf")
+@Table(name = "tp_indicateur_quantitatf")
 public class IndicateurQuantitatif implements Serializable {
+
     /*
     *Debut de la 
     *declaration des variables de la classe
-    */
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull(message = "Ce champs ne doit pas etre vide")
-    private String libelle,nature;
+    private String libelle, nature;
     @NotNull(message = "Ce champs ne doit pas etre vide")
     private int valeur;
-    
-    
+
     /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
+     */
     //mapping avec indicateurdeperformance
-    
     @ManyToOne
     @JoinColumn(name = "indicateurPerformance", referencedColumnName = "id")
     private IndicateurPerformance indicateurPerformance;
@@ -84,5 +82,5 @@ public class IndicateurQuantitatif implements Serializable {
 
     public void setIndicateurPerformance(IndicateurPerformance indicateurPerformance) {
         this.indicateurPerformance = indicateurPerformance;
-    }  
+    }
 }

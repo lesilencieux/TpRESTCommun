@@ -11,12 +11,10 @@ import com.bootcamp.jpa.entities.FournisseurProgramme;
  *
  * @author Administrateur
  */
-public class FournisseurProgrammeRepository  extends BaseRepository<FournisseurProgramme>{
+public class FournisseurProgrammeRepository extends BaseRepository<FournisseurProgramme> {
 
     public FournisseurProgrammeRepository(String unitPersistence) {
-        super(unitPersistence,FournisseurProgramme.class);
+        super(unitPersistence, FournisseurProgramme.class);
     }
-    
-    
-    
+
 }

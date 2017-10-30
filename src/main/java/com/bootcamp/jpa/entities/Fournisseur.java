@@ -19,28 +19,24 @@ import javax.persistence.OneToMany;
 @Entity
 @DiscriminatorValue(value = "Fournisseur")
 public class Fournisseur extends Personne {
-    
+
     /*
     *Debut de la 
     *declaration des variables de la classe
-    */
-    
-    
-     /*
+     */
+ /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
-    /*
+     */
+ /*
     *
     *Les mappings
     *
-    */
-    
+     */
     //Representation de la collection de programme dans fournisseur
-    @OneToMany(mappedBy ="fournisseur")
+    @OneToMany(mappedBy = "fournisseur")
     private final List<FournisseurProgramme> programmes = new ArrayList<FournisseurProgramme>();
-    
+
     //
     @ManyToMany(mappedBy = "fournisseurs")
     private final List<Projet> projets = new ArrayList<Projet>();
@@ -58,7 +54,4 @@ public class Fournisseur extends Personne {
         return "Fournisseur{" + "programmes=" + programmes + ", projets=" + projets + '}';
     }
 
-    
-    
-    
 }

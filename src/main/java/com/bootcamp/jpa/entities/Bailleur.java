@@ -24,30 +24,28 @@ import javax.validation.constraints.NotNull;
 @Entity
 @DiscriminatorValue(value = "Bailleur")
 public class Bailleur extends Personne implements Serializable {
-    
+
     /*
     *Debut de la 
     *declaration des variables de la classe
-    */
+     */
     @NotNull(message = "Ce champs ne doit pas etre vide ")
     @Enumerated(EnumType.STRING)
     private TypeBailleur typeBailleur;
-    
+
     /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
-    /*
+     */
+ /*
     *
     *Les mappings
     *
-    */
-    
+     */
     //Representation de la collection de programme dans bailleur
     @OneToMany(mappedBy = "bailleur")
-    private final List<BailleurProgramme> programmes = new ArrayList<BailleurProgramme> ();
-    
+    private final List<BailleurProgramme> programmes = new ArrayList<BailleurProgramme>();
+
     //Representation de la collection de projet dans bailleur
     @ManyToMany(mappedBy = "bailleurs")
     private final List<Projet> projets = new ArrayList<Projet>();
@@ -62,8 +60,7 @@ public class Bailleur extends Personne implements Serializable {
 
     @Override
     public String toString() {
-        return "Bailleur{ " + "typeBailleur=" + typeBailleur + ", programmes=" + programmes + ", projets=" + projets + " , Nom du Baiilleur"+this.getNom()+ "Id "+this.getId()+'}';
+        return "Bailleur{ " + "typeBailleur=" + typeBailleur + ", programmes=" + programmes + ", projets=" + projets + " , Nom du Baiilleur" + this.getNom() + "Id " + this.getId() + '}';
     }
 
-    
 }

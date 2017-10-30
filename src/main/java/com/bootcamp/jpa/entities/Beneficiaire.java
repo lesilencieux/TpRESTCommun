@@ -21,24 +21,19 @@ import javax.persistence.OneToMany;
 @Entity
 @DiscriminatorValue(value = "Beneficiaire")
 public class Beneficiaire extends Personne implements Serializable {
-    
+
     /*
     *Debut de la 
     *declaration des variables de la classe
-    */
-    
-    
-    
-     /*
+     */
+ /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
+     */
     //Les mappings
-    
-     @OneToMany(cascade = {CascadeType.PERSIST},mappedBy = "beneficiaire")
+    @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "beneficiaire")
     private final List<BeneficiaireProgramme> programmes = new ArrayList<BeneficiaireProgramme>();
-    
+
     //
     @ManyToMany(mappedBy = "beneficiaires")
     private final List<Projet> projets = new ArrayList<Projet>();
@@ -56,6 +51,4 @@ public class Beneficiaire extends Personne implements Serializable {
         return "Beneficiaire{" + "programmes=" + programmes + ", projets=" + projets + '}';
     }
 
-    
-    
 }

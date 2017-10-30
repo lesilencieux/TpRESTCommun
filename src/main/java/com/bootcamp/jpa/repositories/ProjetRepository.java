@@ -11,8 +11,7 @@ import com.bootcamp.jpa.entities.Projet;
  *
  * @author Administrateur
  */
-public class ProjetRepository extends BaseRepository<Projet>{
-    
+public class ProjetRepository extends BaseRepository<Projet> {
 
     public ProjetRepository(String unitPersistence) {
         super(unitPersistence, Projet.class);

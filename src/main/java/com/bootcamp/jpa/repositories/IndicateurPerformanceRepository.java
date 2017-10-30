@@ -11,11 +11,11 @@ import com.bootcamp.jpa.entities.IndicateurPerformance;
  *
  * @author Administrateur
  */
-public class IndicateurPerformanceRepository extends BaseRepository<IndicateurPerformance>{
+public class IndicateurPerformanceRepository extends BaseRepository<IndicateurPerformance> {
 
-     public IndicateurPerformanceRepository( String unitPersistence) {
-         
-         super(unitPersistence,IndicateurPerformance.class);
+    public IndicateurPerformanceRepository(String unitPersistence) {
+
+        super(unitPersistence, IndicateurPerformance.class);
     }
-     
+
 }

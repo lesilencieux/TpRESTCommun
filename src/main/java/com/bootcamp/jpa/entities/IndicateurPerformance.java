@@ -23,26 +23,24 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "tp_indicateur_performance")
 public class IndicateurPerformance implements Serializable {
+
     /*
     *Debut de la 
     *declaration des variables de la classe
-    */
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull(message = "Ce champs ne doit pas etre vide")
-    private String libelle,nature;
+    private String libelle, nature;
     @NotNull(message = "Ce champs ne doit pas etre vide")
     private int valeur;
-    
-    
+
     /*
     *fin de la
     *declaration des variables de la classe
-    */
-    
-
-     //Representation de la collection de indicateur qualitatif dans indicateur de performance
+     */
+    //Representation de la collection de indicateur qualitatif dans indicateur de performance
     @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "indicateurPerformance")
     private List<IndicateurQualitatif> indicateurQualitatifs;
     //Representation de la collection de indicateur quanlitatif dans indicateur de performance
@@ -96,6 +94,5 @@ public class IndicateurPerformance implements Serializable {
     public void setIndicateurQuantitatifs(List<IndicateurQuantitatif> indicateurQuantitatifs) {
         this.indicateurQuantitatifs = indicateurQuantitatifs;
     }
-    
-    
+
 }

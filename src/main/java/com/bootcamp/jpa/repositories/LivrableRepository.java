@@ -11,8 +11,8 @@ import com.bootcamp.jpa.entities.Livrable;
  *
  * @author Administrateur
  */
-public class LivrableRepository extends BaseRepository<Livrable>{
- 
+public class LivrableRepository extends BaseRepository<Livrable> {
+
     public LivrableRepository(String unitPersistence) {
         super(unitPersistence, Livrable.class);
     }

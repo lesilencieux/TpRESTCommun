@@ -18,10 +18,9 @@ import javax.ws.rs.core.*;
 
 /**
  *
- * @author root
+ * @author Iso-Doss
  */
-@Path("/bailleur")
-public class BailleurRestController {
+public class BaseRestController<T> {
 
     //instanciations
     BailleurRepository br = new BailleurRepository("punit-mysql");
@@ -86,7 +85,7 @@ public class BailleurRestController {
             }
         } catch (SQLException ex) {
             //Retourne l erreur de resource non trouvee 
-            Logger.getLogger(BailleurRestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BaseRestController.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(404).entity("Veuillez verifier votre URL").build();
         }
         //Retourne le bailleur demande
@@ -106,7 +105,7 @@ public class BailleurRestController {
         try {
             br.create(bailleur);
         } catch (SQLException ex) {
-            Logger.getLogger(BailleurRestController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BaseRestController.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(200).entity("Probleme de creation").build();
         }
         //Retourne le message de creation
@@ -212,9 +211,9 @@ public class BailleurRestController {
                         }
                     }
                 } catch (IntrospectionException ex) {
-                    Logger.getLogger(BailleurRestController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(BaseRestController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
-                    Logger.getLogger(BailleurRestController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(BaseRestController.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 return result;
