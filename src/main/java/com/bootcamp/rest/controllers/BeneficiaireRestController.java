@@ -169,6 +169,13 @@ public class BeneficiaireRestController {
         return false;
     }
 
+    /**
+     * Méthode qui récupere la liste des Beneficiaires et qui applique un trie
+     * en fonction des filtre passé en parametre
+     *
+     * @param attribut
+     * @return
+     */
     @GET//Signifie que c est une methode de lecture
     @Path("/list/tries")//URI pour avoir la liste des Beneficiaires tries suivant un attribut donne
     @Produces("application/json")//Permet de dire a la methode quelle va produire du JSON
