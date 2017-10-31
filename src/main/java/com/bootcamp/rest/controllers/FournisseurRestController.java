@@ -5,31 +5,15 @@
  */
 package com.bootcamp.rest.controllers;
 
-import com.bootcamp.jpa.entities.Fournisseur;
-import com.bootcamp.jpa.repositories.FournisseurRepository;
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.bootcamp.jpa.entities.*;
+import com.bootcamp.jpa.repositories.*;
+import java.beans.*;
+import java.lang.reflect.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.util.*;
+import java.util.logging.*;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 
 /**
  *
@@ -43,6 +27,11 @@ public class FournisseurRestController {
     Fournisseur fournisseur = new Fournisseur();
     List<Fournisseur> fournisseurs = new ArrayList<>();
 
+    /**
+     * Méthode qui ......
+     *
+     * @return
+     */
     @GET //Signifie que c est une methode de lecture
     @Path("/test")//URI pour retourner l instance non persistee
     @Produces("application/json")//Signifie que la methode produit du JSON
@@ -59,10 +48,15 @@ public class FournisseurRestController {
         return Response.status(200).entity(fournisseur).build();
     }
 
+    /**
+     * Méthode qui retourne la liste de tous les Fournisseurs
+     *
+     * @return
+     */
     @GET//Signifie que c est une methode de lecture
     @Path("/list")//URI pour retourner toutes les  instances de fournisseurs persistees
     @Produces("application/json")//Signifie que la methode produit du JSON
-    public Response getListBaailleurFromDB() {
+    public Response getListFournisseurFromDB() {
         try {
             fournisseurs = fr.findAll();//Recuperation des instances de fournisseur depuis la base de donnee
         } catch (Exception e) {
@@ -73,10 +67,16 @@ public class FournisseurRestController {
         return Response.status(200).entity(fournisseurs).build();
     }
 
+    /**
+     * Méthode qui retourne un Fournisseur grace a son id
+     *
+     * @param id
+     * @return
+     */
     @GET//Signifie que c est une methode de lecture
     @Path("/{id}")//Retourne le fournisseur dont l identifiant est id
     @Produces("application/json")
-    public Response getBaailleurByIdFromDB(@PathParam("id") int id) {
+    public Response getFournisseurByIdFromDB(@PathParam("id") int id) {
         try {
             fournisseur = fr.findById(id);//Recuperation du fournisseur d id  depuis la base
             if (fournisseur != null) {
@@ -92,6 +92,12 @@ public class FournisseurRestController {
         return Response.status(200).entity(fournisseur).build();
     }
 
+    /**
+     * Méthode qui permet de crée un Fournisseur
+     *
+     * @param fournisseur
+     * @return
+     */
     @POST//Signifie que c est une methode d ecriture
     @Path("/create")//URI pour creer
     @Consumes(MediaType.APPLICATION_JSON)//Signifie que l on consomme du JSON pour la creation
@@ -106,6 +112,12 @@ public class FournisseurRestController {
         return Response.status(200).entity("Enregistre avec succes").build();
     }
 
+    /**
+     * Méthode qui permet de mettre a jour un Fournisseur
+     *
+     * @param fournisseur
+     * @return
+     */
     @PUT//Signifie que c est une methode d ecriture
     @Path("/update")//URI  pour la mise a jour ou de creation si ce  existait pas
     @Consumes(MediaType.APPLICATION_JSON)//Signifie que l on consomme du JSON pour la mise a jour
@@ -119,6 +131,20 @@ public class FournisseurRestController {
         return Response.status(200).entity("Mise a jour avec succes").build();
     }
 
+    /**
+     * Méthode qui permet de récuperé un Fournisseur grace a son id et qui
+     * reourne une réponse partielle en enfonction des champs lister par
+     * l'utilisateur
+     *
+     * @param id
+     * @param fields
+     * @return
+     * @throws SQLException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     * @throws IntrospectionException
+     * @throws InvocationTargetException
+     */
     @GET//Signifie qu il s agit d une methode de lecture 
     @Path("/attribut/essentiels/{id}")//Avec cette URI on donnera seulement les attributs que l on souhaite afficher pour un fournisseur donne
     @Produces(MediaType.APPLICATION_JSON)//Production de JSON
@@ -128,6 +154,12 @@ public class FournisseurRestController {
         return Response.status(200).entity(responseMap).build();
     }
 
+    /**
+     *
+     * @param fields
+     * @param field
+     * @return
+     */
     private boolean check(String[] fields, String field) {
 
         for (String field1 : fields) {
@@ -138,6 +170,13 @@ public class FournisseurRestController {
         return false;
     }
 
+    /**
+     * Méthode qui permet de trié la liste de Fournisseur grace au filtre passé
+     * en parametre par l'untilisateur
+     *
+     * @param attribut
+     * @return
+     */
     @GET//Signifie que c est une methode de lecture
     @Path("/list/tries")//URI pour avoir la liste des Fournisseurs tries suivant un attribut donne
     @Produces("application/json")//Permet de dire a la methode quelle va produire du JSON
@@ -181,6 +220,14 @@ public class FournisseurRestController {
         return Response.status(200).entity(bail).build();
     }
 
+    /**
+     * Méthode, qui permet de retourner la liste des Fournisseur en appliquant
+     * un pagination sur le resulat retourner
+     *
+     * @param offset
+     * @param limit
+     * @return
+     */
     @GET
     @Path("/list/paginer")
     @Produces("application/json")
@@ -189,6 +236,16 @@ public class FournisseurRestController {
         return Response.status(200).entity(fr.findPerPager(offset, limit)).build();
     }
 
+    /**
+     * Méthode qui permet de fait une recherche sur une ou plusieurs champs de
+     * Fournisseur
+     *
+     * @param attribut
+     * @param value
+     * @return
+     * @throws IntrospectionException
+     * @throws SQLException
+     */
     @GET
     @Path("/list/recherche")
     @Produces("application/json")
@@ -205,6 +262,17 @@ public class FournisseurRestController {
         return Response.status(200).entity(fournisseurs).build();
     }
 
+    /**
+     *
+     * @param id
+     * @param flds
+     * @return
+     * @throws IntrospectionException
+     * @throws SQLException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
     public HashMap magik(int id, String flds) throws IntrospectionException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         HashMap<String, Object> responseMap = new HashMap<>();
