@@ -27,6 +27,10 @@ public class BeneficiaireRestController {
     Beneficiaire beneficiaire = new Beneficiaire();
     List<Beneficiaire> beneficiaires = new ArrayList<>();
 
+    /**
+     *
+     * @return
+     */
     @GET //Signifie que c est une methode de lecture
     @Path("/test")//URI pour retourner l instance non persistee
     @Produces("application/json")//Signifie que la methode produit du JSON
@@ -43,10 +47,15 @@ public class BeneficiaireRestController {
         return Response.status(200).entity(beneficiaire).build();
     }
 
+    /**
+     * Méthode qui récupere le liste des Beneficiaire
+     *
+     * @return
+     */
     @GET//Signifie que c est une methode de lecture
     @Path("/list")//URI pour retourner toutes les  instances de beneficiaires persistees
     @Produces("application/json")//Signifie que la methode produit du JSON
-    public Response getListBaailleurFromDB() {
+    public Response getListBeneficiaireFromDB() {
         try {
             beneficiaires = br.findAll();//Recuperation des instances de beneficiaire depuis la base de donnee
         } catch (Exception e) {
@@ -57,10 +66,16 @@ public class BeneficiaireRestController {
         return Response.status(200).entity(beneficiaires).build();
     }
 
+    /**
+     * Méthode qui recupère un Beneficiaire grace a sin id
+     *
+     * @param id
+     * @return
+     */
     @GET//Signifie que c est une methode de lecture
     @Path("/{id}")//Retourne le beneficiaire dont l identifiant est id
     @Produces("application/json")
-    public Response getBaailleurByIdFromDB(@PathParam("id") int id) {
+    public Response getBeneficiaireByIdFromDB(@PathParam("id") int id) {
         try {
             beneficiaire = br.findById(id);//Recuperation du beneficiaire d id  depuis la base
             if (beneficiaire != null) {
@@ -76,6 +91,12 @@ public class BeneficiaireRestController {
         return Response.status(200).entity(beneficiaire).build();
     }
 
+    /**
+     * Méthode qui permet de crée un Beneficiaire
+     *
+     * @param beneficiaire
+     * @return
+     */
     @POST//Signifie que c est une methode d ecriture
     @Path("/create")//URI pour creer
     @Consumes(MediaType.APPLICATION_JSON)//Signifie que l on consomme du JSON pour la creation
@@ -90,6 +111,12 @@ public class BeneficiaireRestController {
         return Response.status(200).entity("Enregistre avec succes").build();
     }
 
+    /**
+     * Méthode qui permet de mettre à jour un Beneficiaire
+     *
+     * @param beneficiaire
+     * @return
+     */
     @PUT//Signifie que c est une methode d ecriture
     @Path("/update")//URI  pour la mise a jour ou de creation si ce  existait pas
     @Consumes(MediaType.APPLICATION_JSON)//Signifie que l on consomme du JSON pour la mise a jour
@@ -103,6 +130,20 @@ public class BeneficiaireRestController {
         return Response.status(200).entity("Mise a jour avec succes").build();
     }
 
+    /**
+     * Méthode qui permet de récuperé un Beneficiaire grace a son id et qui
+     * reourne une réponse partielle en enfonction des champs lister par
+     * l'utilisateur
+     *
+     * @param id
+     * @param fields
+     * @return
+     * @throws SQLException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     * @throws IntrospectionException
+     * @throws InvocationTargetException
+     */
     @GET//Signifie qu il s agit d une methode de lecture 
     @Path("/attribut/essentiels/{id}")//Avec cette URI on donnera seulement les attributs que l on souhaite afficher pour un beneficiaire donne
     @Produces(MediaType.APPLICATION_JSON)//Production de JSON
@@ -112,6 +153,12 @@ public class BeneficiaireRestController {
         return Response.status(200).entity(responseMap).build();
     }
 
+    /**
+     *
+     * @param fields
+     * @param field
+     * @return
+     */
     private boolean check(String[] fields, String field) {
 
         for (String field1 : fields) {
@@ -165,6 +212,14 @@ public class BeneficiaireRestController {
         return Response.status(200).entity(bail).build();
     }
 
+    /**
+     * Méthode qui recupère la liste des Beneficiaire et applique une pagination
+     * sur le resulat retourné
+     *
+     * @param offset
+     * @param limit
+     * @return
+     */
     @GET
     @Path("/list/paginer")
     @Produces("application/json")
@@ -173,6 +228,16 @@ public class BeneficiaireRestController {
         return Response.status(200).entity(br.findPerPager(offset, limit)).build();
     }
 
+    /**
+     * Méthode qui permet de fait des recherche sur une ou plusieurs champs de
+     * Beneficiaire
+     *
+     * @param attribut
+     * @param value
+     * @return
+     * @throws IntrospectionException
+     * @throws SQLException
+     */
     @GET
     @Path("/list/recherche")
     @Produces("application/json")
@@ -189,6 +254,17 @@ public class BeneficiaireRestController {
         return Response.status(200).entity(beneficiaires).build();
     }
 
+    /**
+     *
+     * @param id
+     * @param flds
+     * @return
+     * @throws IntrospectionException
+     * @throws SQLException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
     public HashMap magik(int id, String flds) throws IntrospectionException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         HashMap<String, Object> responseMap = new HashMap<>();
