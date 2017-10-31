@@ -5,7 +5,6 @@
  */
 package com.bootcamp.jpa.repositories;
 
-import com.bootcamp.jpa.entities.Bailleur;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
